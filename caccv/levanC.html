@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV - Lê Văn C - Business Analyst</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Reset và thiết lập cơ bản */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Giữ nội dung ở trên cùng, không căn giữa hoàn toàn */
+      padding-top: 70px; /* Khoảng cách cho thanh điều hướng cố định */
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-menu .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .nav-links a.active {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Header Styling */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 1200px;
+      margin: 2rem auto; /* Thêm margin top/bottom cho header */
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    header h1 {
+      color: #4a5568;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    header h1 i {
+      margin-right: 0.5rem;
+      color: #667eea;
+    }
+
+    /* Container Styling */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      flex-grow: 1; /* Cho phép container chiếm không gian còn lại */
+      display: flex;
+      justify-content: center; /* Căn giữa card trong container */
+      align-items: flex-start; /* Đặt card ở trên cùng của container */
+      padding-bottom: 2rem; /* Thêm padding dưới cùng */
+    }
+
+    /* Card Styling */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      width: 100%; /* Đảm bảo card chiếm toàn bộ chiều rộng khả dụng */
+      max-width: 800px; /* Giới hạn chiều rộng tối đa của card */
+      animation: fadeInUp 1s ease-out 0.4s both; /* Thêm animation */
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .card:hover {
+      transform: translateY(-2px); /* Hiệu ứng hover nhẹ */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .company-header { /* Đổi tên thành candidate-header để phù hợp hơn */
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .company-logo { /* Đổi tên thành candidate-avatar để phù hợp hơn */
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%; /* Làm tròn thành avatar */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .company-info h2 { /* Đổi tên thành candidate-name để phù hợp hơn */
+      font-size: 1.8rem; /* Kích thước lớn hơn cho tên */
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .company-industry { /* Đổi tên thành candidate-title để phù hợp hơn */
+      color: #4a5568;
+      font-size: 1.2rem; /* Kích thước lớn hơn cho chức danh */
+    }
+
+    .company-industry i {
+      margin-right: 0.5rem;
+      color: #667eea;
+    }
+
+    .company-description { /* Đổi tên thành candidate-summary để phù hợp hơn */
+      color: #4a5568;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      text-align: justify;
+    }
+
+    .company-details { /* Đổi tên thành candidate-details để phù hợp hơn */
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(237, 242, 247, 0.7);
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+      color: #4a5568; /* Màu chữ cho các mục chi tiết */
+      font-size: 1rem;
+    }
+
+    .detail-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .detail-item i {
+      color: #667eea;
+      font-size: 1.2rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-menu {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+      }
+
+      header {
+        margin: 1rem auto;
+        padding: 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .company-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .company-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .company-info h2 {
+        font-size: 1.5rem;
+      }
+
+      .company-industry {
+        font-size: 1rem;
+      }
+
+      .company-description {
+        font-size: 1rem;
+      }
+
+      .company-details {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .detail-item {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-menu">
+    <a href="#" class="logo">
+      <i class="fas fa-briefcase"></i> Job Portal
+    </a>
+    <div class="nav-links">
+      <a href="#" class="active"><i class="fas fa-search"></i> Tìm việc</a>
+      <a href="#"><i class="fas fa-tachometer-alt"></i> Quản lý Doanh nghiệp</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1><i class="fas fa-user-tie"></i> Lê Văn C - CV</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="company-header">
+        <div class="company-logo">LC</div>
+        <div class="company-info">
+          <h2>Lê Văn C</h2>
+          <p class="company-industry"><i class="fas fa-chart-line"></i> Business Analyst</p>
+        </div>
+      </div>
+      
+      <p class="company-description">
+        Business Analyst với 5 năm kinh nghiệm trong lĩnh vực tài chính - ngân hàng. 
+        Chuyên sâu về phân tích dữ liệu, quản lý rủi ro và tối ưu hóa quy trình kinh doanh. 
+        Đã góp phần tăng hiệu suất 30% cho các dự án được phân công.
+      </p>
+      
+      <div class="company-details">
+        <div class="detail-item">
+          <i class="fas fa-envelope"></i>
+          levanc@example.com
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-phone"></i>
+          (+84) 912 345 678
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-tools"></i>
+          Kỹ năng: SQL, Python, Power BI, Risk Analysis
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-briefcase"></i>
+          Kinh nghiệm: 5 năm tại BIDV & Techcombank
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-graduation-cap"></i>
+          Học vấn: Thạc sĩ Tài chính, ĐH Kinh tế TP.HCM
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-award"></i>
+          Chứng chỉ: CFA Level 2
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-certificate"></i>
+          FRM (Financial Risk Manager)
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-book-open"></i>
+          IELTS: 7.0
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-project-diagram"></i>
+          Dự án: Tối ưu hóa quy trình cho vay (ROI +25%)
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

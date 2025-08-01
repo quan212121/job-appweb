@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trang Cá Nhân Nguyễn Văn A</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Thư viện Solana Web3.js -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <style>
+    /* Reset và thiết lập cơ bản */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 70px; /* Khoảng cách cho thanh điều hướng cố định */
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-menu .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .nav-links a.active {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Header Styling */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    header h1 {
+      color: #4a5568;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    header h1 i {
+      margin-right: 0.5rem;
+      color: #667eea;
+    }
+
+    /* Container Styling */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-bottom: 2rem;
+    }
+
+    /* Card Styling */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 800px;
+      animation: fadeInUp 1s ease-out 0.4s both;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .candidate-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .candidate-avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .candidate-info h2 {
+      font-size: 1.8rem;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .candidate-title {
+      color: #4a5568;
+      font-size: 1.2rem;
+    }
+
+    .candidate-title i {
+      margin-right: 0.5rem;
+      color: #667eea;
+    }
+
+    .candidate-description {
+      color: #4a5568;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      text-align: justify;
+    }
+
+    .candidate-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem; /* Thêm khoảng cách dưới cùng */
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(237, 242, 247, 0.7);
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+      color: #4a5568;
+      font-size: 1rem;
+    }
+
+    .detail-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .detail-item i {
+      color: #667eea;
+      font-size: 1.2rem;
+    }
+
+    /* Styles for NFT Section */
+    .nft-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .nft-section h3 {
+      font-size: 1.5rem;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .nft-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .nft-actions button {
+      background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Màu xanh lá cây */
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .nft-actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .nft-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .nft-input-group label {
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 0.95rem;
+    }
+
+    .nft-input-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #2d3748;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nft-input-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    }
+
+    .nft-certificates-list {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+
+    .nft-certificates-list h4 {
+      font-size: 1.3rem;
+      color: #2d3748;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .nft-certificates-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nft-certificates-list li {
+      background: rgba(237, 242, 247, 0.7);
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: #4a5568;
+      font-size: 1rem;
+    }
+
+    .nft-certificates-list li i {
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      text-align: center;
+      display: none;
+    }
+
+    .status-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .status-message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-menu {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+      }
+
+      header {
+        margin: 1rem auto;
+        padding: 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        padding: 0 0.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+        max-width: 90%;
+      }
+
+      .candidate-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .candidate-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .candidate-info h2 {
+        font-size: 1.5rem;
+      }
+
+      .candidate-title {
+        font-size: 1rem;
+      }
+
+      .candidate-description {
+        font-size: 1rem;
+      }
+
+      .candidate-details {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .detail-item {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .nft-actions button {
+        font-size: 1rem;
+        padding: 0.7rem 1rem;
+      }
+
+      .nft-input-group input {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-menu">
+    <a href="../index.html" class="logo">
+      <i class="fas fa-briefcase"></i> Job Portal
+    </a>
+    <div class="nav-links">
+      <a href="#" class="active"><i class="fas fa-user-circle"></i> Cá nhân</a>
+      <a href="../index.html"><i class="fas fa-search"></i> Tìm việc</a>
+      <a href="#"><i class="fas fa-tachometer-alt"></i> Quản lý Doanh nghiệp</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1><i class="fas fa-user-tie"></i> Trang Cá Nhân Nguyễn Văn A</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="candidate-header">
+        <div class="candidate-avatar">NA</div>
+        <div class="candidate-info">
+          <h2>Nguyễn Văn A</h2>
+          <p class="candidate-title"><i class="fas fa-code"></i> Lập trình viên Backend</p>
+        </div>
+      </div>
+      
+      <p class="candidate-description">
+        Lập trình viên web với 3 năm kinh nghiệm trong việc phát triển các ứng dụng web hiệu suất cao. 
+        Sở hữu kỹ năng mạnh về React, Node.js và MongoDB, luôn tìm kiếm cơ hội để đóng góp vào các dự án sáng tạo.
+      </p>
+      
+      <div class="candidate-details">
+        <div class="detail-item">
+          <i class="fas fa-envelope"></i>
+          nguyenvana@example.com
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-tools"></i>
+          Kỹ năng: React, Node.js, MongoDB
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-briefcase"></i>
+          Kinh nghiệm: 3 năm tại TechCorp
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-graduation-cap"></i>
+          Học vấn: Cử nhân Khoa học Máy tính, Đại học Bách khoa Hà Nội
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-award"></i>
+          Chứng chỉ AWS Certified Developer – Associate
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-certificate"></i>
+          Chứng chỉ Google Cloud Professional Cloud Architect
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-code-branch"></i>
+          Chứng chỉ Certified Kubernetes Administrator (CKA)
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-book-open"></i>
+          Chứng chỉ TOEIC: 850
+        </div>
+      </div>
+
+      <!-- Phần Chứng chỉ NFT Solana -->
+      <div class="nft-section">
+        <h3><i class="fas fa-cube"></i> Chứng chỉ NFT Solana</h3>
+        <div class="nft-actions">
+          <button id="connectWalletBtn">
+            <i class="fas fa-wallet"></i> Kết nối Ví Phantom
+          </button>
+          <p id="walletStatus" class="status-message">Đang chờ ví Phantom...</p>
+
+          <div class="nft-input-group">
+            <label for="nftMintAddress"><i class="fas fa-fingerprint"></i> Địa chỉ Mint NFT Solana:</label>
+            <input type="text" id="nftMintAddress" placeholder="Địa chỉ Mint NFT Solana (ví dụ: F4n...)" value="G2Pq2g9z5r2wz7n8x1y3a4b6c8d0e2f4h6j8k0l2m4n6p8q0r2s4t6u8v0w2x4y6z8">
+          </div>
+          <button id="updateNftCertificatesBtn">
+            <i class="fas fa-sync-alt"></i> Cập nhật Chứng chỉ từ NFT
+          </button>
+          <div id="nftUpdateMessage" class="status-message"></div>
+
+          <button id="mintNftBtn" style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);">
+            <i class="fas fa-plus-circle"></i> Mint Chứng chỉ NFT (Cần Backend)
+          </button>
+        </div>
+
+        <div class="nft-certificates-list">
+          <h4>Các Chứng chỉ đã Cập nhật từ NFT:</h4>
+          <ul id="nftCertList">
+            <!-- Chứng chỉ NFT sẽ được thêm vào đây -->
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Khởi tạo kết nối Solana
+      // Sử dụng devnet để dễ dàng thử nghiệm
+      const connection = new solanaWeb3.Connection(
+        solanaWeb3.clusterApiUrl('devnet'),
+        'confirmed'
+      );
+
+      // Các Public Key Program ID cần thiết cho Solana
+      // SPL Token Program ID
+      const TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5mW');
+      // Associated Token Account Program ID
+      const ASSOCIATED_TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey('ATokenGPvbdGV a8r1fdW1tTz5W1x3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z'); // Example, replace with actual
+      // Metaplex Token Metadata Program ID
+      const METAPLEX_PROGRAM_ID = new solanaWeb3.PublicKey('metaqbxxUerdq28cj1RbTFW3aDGJzFsAekEapL5Qdbk');
+
+      const connectWalletBtn = document.getElementById('connectWalletBtn');
+      const walletStatus = document.getElementById('walletStatus');
+      const updateNftCertificatesBtn = document.getElementById('updateNftCertificatesBtn');
+      const nftMintAddressInput = document.getElementById('nftMintAddress');
+      const nftCertList = document.getElementById('nftCertList');
+      const nftUpdateMessage = document.getElementById('nftUpdateMessage');
+      const mintNftBtn = document.getElementById('mintNftBtn');
+
+      let connectedPublicKey = null; // Lưu trữ Public Key của ví đã kết nối
+
+      // Hàm nội bộ để thực hiện kết nối ví sau khi Phantom được phát hiện
+      const performWalletConnection = async () => {
+        try {
+          const response = await window.solana.connect();
+          connectedPublicKey = response.publicKey;
+          walletStatus.textContent = `Đã kết nối: ${connectedPublicKey.toBase58().substring(0, 6)}...${connectedPublicKey.toBase58().substring(connectedPublicKey.toBase58().length - 4)}`;
+          walletStatus.classList.remove('error');
+          walletStatus.classList.add('success');
+
+          window.solana.on('accountChanged', (publicKey) => {
+            if (publicKey) {
+              connectedPublicKey = publicKey;
+              walletStatus.textContent = `Đã kết nối: ${publicKey.toBase58().substring(0, 6)}...${publicKey.toBase58().substring(publicKey.toBase58().length - 4)}`;
+              walletStatus.classList.remove('error');
+              walletStatus.classList.add('success');
+            } else {
+              connectedPublicKey = null;
+              walletStatus.textContent = 'Ví đã bị ngắt kết nối.';
+              walletStatus.classList.remove('success');
+              walletStatus.classList.add('error');
+            }
+          });
+
+          window.solana.on('disconnect', () => {
+            connectedPublicKey = null;
+            walletStatus.textContent = 'Ví đã bị ngắt kết nối.';
+            walletStatus.classList.remove('success');
+            walletStatus.classList.add('error');
+          });
+
+        } catch (error) {
+          console.error("Lỗi khi kết nối ví:", error);
+          if (error.code === 4001) { // Người dùng từ chối yêu cầu
+            walletStatus.textContent = 'Người dùng đã từ chối yêu cầu kết nối ví.';
+          } else {
+            walletStatus.textContent = `Lỗi: ${error.message || 'Không thể kết nối ví.'}`;
+          }
+          walletStatus.classList.remove('success');
+          walletStatus.classList.add('error');
+        }
+      };
+
+      // Hàm để kiểm tra sự sẵn sàng của Phantom và sau đó kết nối
+      const checkPhantomAndConnect = () => {
+        if (window.solana && window.solana.isPhantom) {
+          performWalletConnection();
+        } else {
+          walletStatus.textContent = 'Đang tìm ví Phantom...';
+          walletStatus.classList.remove('success', 'error');
+
+          setTimeout(() => {
+            if (window.solana && window.solana.isPhantom) {
+              performWalletConnection();
+            } else {
+              walletStatus.textContent = 'Vui lòng cài đặt ví Phantom để kết nối.';
+              walletStatus.classList.remove('success');
+              walletStatus.classList.add('error');
+              console.warn("Đối tượng Phantom không tìm thấy! Vui lòng cài đặt tiện ích mở rộng ví Phantom.");
+            }
+          }, 1000); // Chờ 1 giây để Phantom inject đối tượng
+        }
+      };
+
+      /**
+       * Xác minh quyền sở hữu NFT của ví đã kết nối.
+       * @param {solanaWeb3.PublicKey} ownerPublicKey Public Key của ví chủ sở hữu.
+       * @param {string} nftMintAddressString Địa chỉ Mint NFT dưới dạng chuỗi.
+       * @returns {Promise<boolean>} True nếu ví sở hữu NFT, ngược lại là False.
+       */
+      const verifyNftOwnership = async (ownerPublicKey, nftMintAddressString) => {
+          try {
+              const nftMintPublicKey = new solanaWeb3.PublicKey(nftMintAddressString);
+
+              // Tính toán địa chỉ Associated Token Account (ATA) cho NFT này và chủ sở hữu này
+              // Đây là tài khoản mà NFT sẽ được giữ trong ví của người dùng
+              const [associatedTokenAccountAddress] = solanaWeb3.PublicKey.findProgramAddressSync(
+                  [
+                      ownerPublicKey.toBuffer(),
+                      TOKEN_PROGRAM_ID.toBuffer(),
+                      nftMintPublicKey.toBuffer(),
+                  ],
+                  ASSOCIATED_TOKEN_PROGRAM_ID
+              );
+
+              // Lấy thông tin tài khoản ATA
+              const tokenAccountInfo = await connection.getParsedAccountInfo(associatedTokenAccountAddress);
+
+              if (!tokenAccountInfo.value) {
+                  console.log("Không tìm thấy Token Account cho NFT này thuộc về ví đã kết nối.");
+                  return false; // Không sở hữu
+              }
+
+              // Kiểm tra số dư token trong ATA
+              // Đối với NFT (non-fungible), số lượng phải là 1
+              const parsedAccountData = tokenAccountInfo.value.data;
+              const tokenAmount = parsedAccountData.parsed.info.tokenAmount.uiAmount;
+
+              if (tokenAmount === 1) {
+                  console.log("Ví đã kết nối sở hữu NFT này.");
+                  return true;
+              } else {
+                  console.log("Ví đã kết nối không sở hữu NFT này (hoặc số lượng không phải 1).");
+                  return false;
+              }
+
+          } catch (error) {
+              console.error("Lỗi khi xác minh quyền sở hữu NFT:", error);
+              return false;
+          }
+      };
+
+      /**
+       * Đọc dữ liệu Metadata của NFT từ Solana.
+       * LƯU Ý: Việc giải mã metadata NFT trên frontend thuần HTML/JS rất phức tạp
+       * vì nó yêu cầu thư viện @metaplex-foundation/mpl-token-metadata
+       * và các dependency khác thường dùng trong môi trường Node.js/bundler.
+       *
+       * Trong ứng dụng thực tế, bạn nên:
+       * 1. Sử dụng một dịch vụ API bên thứ ba (ví dụ: Helius, QuickNode, Alchemy) để lấy metadata đã được giải mã.
+       * 2. Hoặc xây dựng một Backend Proxy server để xử lý việc này.
+       *
+       * Ví dụ này sẽ mô phỏng việc fetch metadata từ một URI giả định.
+       * @param {string} nftMintAddressString Địa chỉ Mint NFT.
+       * @returns {Promise<object|null>} Metadata của NFT hoặc null nếu có lỗi.
+       */
+      const fetchNftMetadata = async (nftMintAddressString) => {
+          try {
+              // Địa chỉ Mint NFT
+              const nftMintPublicKey = new solanaWeb3.PublicKey(nftMintAddressString);
+
+              // Tính toán địa chỉ Metadata Account (PDA)
+              const [metadataAccountPDA] = solanaWeb3.PublicKey.findProgramAddressSync(
+                  [
+                      Buffer.from("metadata"), // Chuỗi "metadata"
+                      METAPLEX_PROGRAM_ID.toBuffer(), // Public Key của Metaplex Token Metadata Program
+                      nftMintPublicKey.toBuffer(), // Địa chỉ Mint NFT
+                  ],
+                  METAPLEX_PROGRAM_ID
+              );
+
+              // Lấy thông tin tài khoản Metadata
+              const metadataAccountInfo = await connection.getAccountInfo(metadataAccountPDA);
+
+              if (!metadataAccountInfo) {
+                  console.log("Không tìm thấy Metadata Account cho NFT này.");
+                  // Nếu không tìm thấy metadata account, có thể NFT không tồn tại hoặc không phải là Metaplex NFT
+                  return null;
+              }
+
+              // *** PHẦN NÀY CẦN THƯ VIỆN METAPLEX ĐỂ GIẢI MÃ DỮ LIỆU THÔ ***
+              // Vì không thể import trực tiếp trong HTML thuần, chúng ta sẽ giả định
+              // rằng chúng ta đã lấy được URI từ đâu đó (ví dụ: từ một API bên thứ ba).
+              // Giả sử URI metadata của NFT này là:
+              const mockMetadataUri = `https://example.com/nft-metadata/${nftMintAddressString}.json`; // URI giả định
+              // Trong thực tế, bạn sẽ giải mã metadataAccountInfo.data để lấy URI.
+
+              // Fetch metadata JSON từ URI
+              const response = await fetch(mockMetadataUri);
+              if (!response.ok) {
+                  throw new Error(`Không thể tải metadata từ ${mockMetadataUri}: ${response.statusText}`);
+              }
+              const metadataJson = await response.json();
+
+              return metadataJson;
+
+          } catch (error) {
+              console.error("Lỗi khi đọc metadata NFT:", error);
+              return null;
+          }
+      };
+
+      // Hàm cập nhật chứng chỉ từ NFT
+      const updateNftCertificates = async () => {
+        const nftMintAddress = nftMintAddressInput.value.trim();
+
+        if (!connectedPublicKey) {
+          nftUpdateMessage.textContent = 'Vui lòng kết nối ví Phantom trước.';
+          nftUpdateMessage.className = 'status-message error';
+          setTimeout(() => nftUpdateMessage.style.display = 'none', 3000);
+          return;
+        }
+
+        if (!nftMintAddress) {
+          nftUpdateMessage.textContent = 'Vui lòng nhập Địa chỉ Mint NFT Solana.';
+          nftUpdateMessage.className = 'status-message error';
+          setTimeout(() => nftUpdateMessage.style.display = 'none', 3000);
+          return;
+        }
+
+        nftUpdateMessage.textContent = 'Đang kiểm tra quyền sở hữu và tìm kiếm chứng chỉ NFT...';
+        nftUpdateMessage.className = 'status-message success';
+
+        try {
+          // Bước 1: Xác minh quyền sở hữu
+          const isOwned = await verifyNftOwnership(connectedPublicKey, nftMintAddress);
+
+          if (!isOwned) {
+              nftUpdateMessage.textContent = 'Ví đã kết nối không sở hữu NFT này.';
+              nftUpdateMessage.className = 'status-message error';
+              return;
+          }
+
+          // Bước 2: Đọc dữ liệu metadata thật (hoặc mô phỏng việc đọc)
+          const nftMetadata = await fetchNftMetadata(nftMintAddress);
+
+          if (!nftMetadata) {
+              nftUpdateMessage.textContent = 'Không thể lấy thông tin chi tiết của NFT.';
+              nftUpdateMessage.className = 'status-message error';
+              return;
+          }
+
+          // Mô phỏng việc thêm chứng chỉ vào danh sách từ metadata thật
+          // Trong thực tế, bạn sẽ dùng nftMetadata.name, nftMetadata.description, v.v.
+          const newCertificates = [
+            `Chứng chỉ "${nftMetadata.name || 'Không tên'}" (Tổ chức: ${nftMetadata.attributes ? nftMetadata.attributes.find(attr => attr.trait_type === 'Issuer')?.value || 'N/A' : 'N/A'})`,
+            `Mô tả: ${nftMetadata.description || 'Không có mô tả.'}`
+          ];
+
+          nftCertList.innerHTML = ''; // Xóa các chứng chỉ cũ
+          newCertificates.forEach(cert => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<i class="fas fa-certificate"></i> ${cert}`;
+            nftCertList.appendChild(listItem);
+          });
+
+          nftUpdateMessage.textContent = 'Đã cập nhật chứng chỉ từ NFT thành công!';
+          nftUpdateMessage.className = 'status-message success';
+
+        } catch (error) {
+          console.error("Lỗi khi cập nhật chứng chỉ NFT:", error);
+          nftUpdateMessage.textContent = `Lỗi khi đọc NFT: ${error.message || 'Không thể tìm thấy chứng chỉ.'}`;
+          nftUpdateMessage.className = 'status-message error';
+        } finally {
+          setTimeout(() => nftUpdateMessage.style.display = 'none', 5000);
+        }
+      };
+
+      /**
+       * Hàm Minting NFT (Mô phỏng - Cần Backend thực sự)
+       * LƯU Ý QUAN TRỌNG: Việc mint NFT trên Solana là một quá trình phức tạp
+       * và KHÔNG NÊN được thực hiện trực tiếp từ frontend thuần HTML/JS vì lý do bảo mật
+       * và độ phức tạp của các giao dịch.
+       *
+       * Trong ứng dụng thực tế, bạn sẽ:
+       * 1. Xây dựng một Backend Server (ví dụ: Node.js, Python)
+       * 2. Backend sẽ sử dụng Metaplex JS SDK (hoặc các thư viện tương tự)
+       * để xử lý logic minting (tạo tài khoản, ký giao dịch phức tạp).
+       * 3. Frontend sẽ gửi yêu cầu HTTP đến Backend để yêu cầu mint NFT.
+       * 4. Backend sẽ trả về giao dịch đã được tạo (hoặc một phần của nó) để ví Phantom của người dùng ký xác nhận.
+       */
+      const mintNft = async () => {
+          if (!connectedPublicKey) {
+              nftUpdateMessage.textContent = 'Vui lòng kết nối ví Phantom để mint NFT.';
+              nftUpdateMessage.className = 'status-message error';
+              setTimeout(() => nftUpdateMessage.style.display = 'none', 3000);
+              return;
+          }
+
+          nftUpdateMessage.textContent = 'Đang yêu cầu mint NFT... (Chức năng này cần Backend)';
+          nftUpdateMessage.className = 'status-message success';
+
+          // Đây là phần mô phỏng:
+          console.log("Yêu cầu mint NFT cho ví:", connectedPublicKey.toBase58());
+          console.log("Trong thực tế, một yêu cầu sẽ được gửi đến Backend để xử lý minting.");
+
+          // Giả định backend xử lý thành công và trả về một giao dịch cần ký
+          // const transaction = await fetch('/api/mint-nft', {
+          //     method: 'POST',
+          //     headers: { 'Content-Type': 'application/json' },
+          //     body: JSON.stringify({ recipient: connectedPublicKey.toBase58(), metadata: { name: "Chứng chỉ mới", description: "Mô tả..." } })
+          // }).then(res => res.json());
+
+          // Sau đó, người dùng sẽ ký và gửi giao dịch đó
+          // const signedTransaction = await window.solana.signTransaction(solanaWeb3.Transaction.from(transaction.serialized));
+          // const txid = await connection.sendRawTransaction(signedTransaction.serialize());
+          // console.log('Transaction ID:', txid);
+
+          setTimeout(() => {
+              nftUpdateMessage.textContent = 'Yêu cầu Mint NFT đã được gửi. (Chức năng này cần Backend thực sự)';
+              nftUpdateMessage.className = 'status-message success';
+          }, 2000);
+          setTimeout(() => nftUpdateMessage.style.display = 'none', 5000);
+      };
+
+
+      // Gắn sự kiện click cho nút kết nối ví
+      connectWalletBtn.addEventListener('click', checkPhantomAndConnect);
+      // Gắn sự kiện click cho nút cập nhật chứng chỉ
+      updateNftCertificatesBtn.addEventListener('click', updateNftCertificates);
+      // Gắn sự kiện click cho nút Mint NFT
+      mintNftBtn.addEventListener('click', mintNft);
+
+      // Tự động kiểm tra Phantom khi trang tải
+      checkPhantomAndConnect();
+    });
+  </script>
+</body>
+</html>

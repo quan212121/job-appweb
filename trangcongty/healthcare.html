@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthCare Solutions</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Navigation Menu */
+    .nav-menu {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-menu .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #38b2ac;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: #38b2ac;
+      color: white;
+    }
+
+    /* Reset và thiết lập cơ bản */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #38b2ac 0%, #0bc5ea 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #333;
+      padding-top: 70px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .company-profile {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .company-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .company-logo {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #38b2ac, #0bc5ea);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 2rem;
+    }
+
+    .company-logo i {
+      font-size: 3rem;
+      color: white;
+    }
+
+    .company-info h1 {
+      font-size: 2.5rem;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .company-type {
+      color: #38b2ac;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .company-stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-item {
+      background: rgba(56, 178, 172, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #38b2ac;
+    }
+
+    .stat-label {
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #2d3748;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title i {
+      margin-right: 0.5rem;
+      color: #38b2ac;
+    }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .benefit-item {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .benefit-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .benefit-item i {
+      font-size: 2rem;
+      color: #38b2ac;
+      margin-bottom: 1rem;
+    }
+
+    .job-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .job-card {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .job-title {
+      font-size: 1.2rem;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .job-details {
+      color: #4a5568;
+      margin-bottom: 1rem;
+    }
+
+    .job-tag {
+      display: inline-block;
+      background: rgba(56, 178, 172, 0.1);
+      color: #38b2ac;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-info {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .contact-method i {
+      margin-right: 0.5rem;
+      color: #38b2ac;
+    }
+
+    @media (max-width: 768px) {
+      .company-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .company-logo {
+        margin: 0 auto 1rem auto;
+      }
+
+      .company-stats {
+        flex-direction: column;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-menu">
+    <a href="../index.html" class="logo">
+      <i class="fas fa-briefcase"></i> Job Portal
+    </a>
+    <div class="nav-links">
+      <a href="../index.html"><i class="fas fa-search"></i> Tìm việc</a>
+      <a href="../company-dashboard.html"><i class="fas fa-tachometer-alt"></i> Quản lý Doanh nghiệp</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="company-profile">
+      <div class="company-header">
+        <div class="company-logo">
+          <i class="fas fa-hospital"></i>
+        </div>
+        <div class="company-info">
+          <h1>HealthCare Solutions</h1>
+          <p class="company-type"><i class="fas fa-building"></i> Công ty Y tế và Chăm sóc Sức khỏe</p>
+          <div class="company-stats">
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Nhân viên</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">15+</div>
+              <div class="stat-label">Năm kinh nghiệm</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">20+</div>
+              <div class="stat-label">Chi nhánh</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><i class="fas fa-info-circle"></i> Giới thiệu</h2>
+        <p>HealthCare Solutions là đơn vị hàng đầu trong lĩnh vực y tế và chăm sóc sức khỏe tại Việt Nam. 
+        Chúng tôi cung cấp các dịch vụ y tế chất lượng cao, với đội ngũ bác sĩ giàu kinh nghiệm và cơ sở vật chất hiện đại.</p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><i class="fas fa-gift"></i> Phúc lợi</h2>
+        <div class="benefit-grid">
+          <div class="benefit-item">
+            <i class="fas fa-hand-holding-medical"></i>
+            <h3>Bảo hiểm Y tế Toàn diện</h3>
+            <p>Chế độ bảo hiểm y tế cao cấp cho nhân viên và người thân</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-coins"></i>
+            <h3>Lương thưởng hấp dẫn</h3>
+            <p>Mức lương cạnh tranh, phụ cấp và thưởng theo hiệu suất</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-user-md"></i>
+            <h3>Phát triển chuyên môn</h3>
+            <p>Cơ hội đào tạo và nâng cao trình độ chuyên môn</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-clock"></i>
+            <h3>Thời gian linh hoạt</h3>
+            <p>Lịch làm việc linh hoạt và chế độ nghỉ phép hợp lý</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><i class="fas fa-briefcase"></i> Vị trí tuyển dụng</h2>
+        <div class="job-list">
+          <div class="job-card">
+            <h3 class="job-title">Bác sĩ Đa khoa</h3>
+            <p class="job-details">
+              <i class="fas fa-money-bill-wave"></i> 3000-5000 USD
+              <br>
+              <i class="fas fa-map-marker-alt"></i> TP.HCM
+            </p>
+            <div class="job-tags">
+              <span class="job-tag">Nội khoa</span>
+              <span class="job-tag">Kinh nghiệm 5 năm</span>
+              <span class="job-tag">Tiếng Anh</span>
+            </div>
+          </div>
+          <div class="job-card">
+            <h3 class="job-title">Y tá chuyên khoa</h3>
+            <p class="job-details">
+              <i class="fas fa-money-bill-wave"></i> 1000-1500 USD
+              <br>
+              <i class="fas fa-map-marker-alt"></i> Hà Nội
+            </p>
+            <div class="job-tags">
+              <span class="job-tag">ICU</span>
+              <span class="job-tag">3 năm kinh nghiệm</span>
+              <span class="job-tag">Ca trực</span>
+            </div>
+          </div>
+          <div class="job-card">
+            <h3 class="job-title">Quản lý Dược phẩm</h3>
+            <p class="job-details">
+              <i class="fas fa-money-bill-wave"></i> 2000-2500 USD
+              <br>
+              <i class="fas fa-map-marker-alt"></i> Đà Nẵng
+            </p>
+            <div class="job-tags">
+              <span class="job-tag">Dược học</span>
+              <span class="job-tag">Quản lý kho</span>
+              <span class="job-tag">GMP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title"><i class="fas fa-phone-alt"></i> Liên hệ</h2>
+        <div class="contact-info">
+          <div class="contact-method">
+            <i class="fas fa-envelope"></i>
+            Email: careers@healthcare.com
+          </div>
+          <div class="contact-method">
+            <i class="fas fa-phone"></i>
+            Điện thoại: (84) 987-654-321
+          </div>
+          <div class="contact-method">
+            <i class="fas fa-map-marker-alt"></i>
+            Địa chỉ: 456 Nguyễn Chí Thanh, Q.5, TP.HCM
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
