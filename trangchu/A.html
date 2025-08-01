@@ -816,39 +816,56 @@
        * 3. Frontend sẽ gửi yêu cầu HTTP đến Backend để yêu cầu mint NFT.
        * 4. Backend sẽ trả về giao dịch đã được tạo (hoặc một phần của nó) để ví Phantom của người dùng ký xác nhận.
        */
-      const mintNft = async () => {
-          if (!connectedPublicKey) {
-              nftUpdateMessage.textContent = 'Vui lòng kết nối ví Phantom để mint NFT.';
-              nftUpdateMessage.className = 'status-message error';
-              setTimeout(() => nftUpdateMessage.style.display = 'none', 3000);
-              return;
+       const mintNft = async () => {
+        if (!connectedPublicKey) {
+          nftUpdateMessage.textContent = 'Vui lòng kết nối ví Phantom để mint NFT.';
+          nftUpdateMessage.className = 'status-message error';
+          setTimeout(() => nftUpdateMessage.style.display = 'none', 3000);
+          return;
+        }
+
+        nftUpdateMessage.textContent = 'Đang gửi yêu cầu mint NFT đến backend...';
+        nftUpdateMessage.className = 'status-message success';
+
+        try {
+          const mintRequest = {
+            name: "Chứng chỉ Blockchain",
+            symbol: "CERT",
+            uri: "https://example.com/certificate/cert-001.json",  // URI metadata thật (nên dùng IPFS hoặc server của bạn)
+            recipient: connectedPublicKey.toBase58()
+          };
+
+          const response = await fetch("http://localhost:3001/mint-nft", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(mintRequest)
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Lỗi không xác định từ backend');
           }
 
-          nftUpdateMessage.textContent = 'Đang yêu cầu mint NFT... (Chức năng này cần Backend)';
+          const result = await response.json();
+
+          nftUpdateMessage.innerHTML = `
+            <span>Đã mint NFT thành công!</span><br>
+            Mint Address: <code>${result.mint}</code><br>
+            <a href="${result.explorer}" target="_blank">Xem trên Solana Explorer</a>
+          `;
           nftUpdateMessage.className = 'status-message success';
 
-          // Đây là phần mô phỏng:
-          console.log("Yêu cầu mint NFT cho ví:", connectedPublicKey.toBase58());
-          console.log("Trong thực tế, một yêu cầu sẽ được gửi đến Backend để xử lý minting.");
+        } catch (error) {
+          console.error("Lỗi khi gửi yêu cầu mint:", error);
+          nftUpdateMessage.textContent = `Lỗi khi gửi yêu cầu mint NFT: ${error.message}`;
+          nftUpdateMessage.className = 'status-message error';
+        }
 
-          // Giả định backend xử lý thành công và trả về một giao dịch cần ký
-          // const transaction = await fetch('/api/mint-nft', {
-          //     method: 'POST',
-          //     headers: { 'Content-Type': 'application/json' },
-          //     body: JSON.stringify({ recipient: connectedPublicKey.toBase58(), metadata: { name: "Chứng chỉ mới", description: "Mô tả..." } })
-          // }).then(res => res.json());
-
-          // Sau đó, người dùng sẽ ký và gửi giao dịch đó
-          // const signedTransaction = await window.solana.signTransaction(solanaWeb3.Transaction.from(transaction.serialized));
-          // const txid = await connection.sendRawTransaction(signedTransaction.serialize());
-          // console.log('Transaction ID:', txid);
-
-          setTimeout(() => {
-              nftUpdateMessage.textContent = 'Yêu cầu Mint NFT đã được gửi. (Chức năng này cần Backend thực sự)';
-              nftUpdateMessage.className = 'status-message success';
-          }, 2000);
-          setTimeout(() => nftUpdateMessage.style.display = 'none', 5000);
+        setTimeout(() => nftUpdateMessage.style.display = 'none', 7000);
       };
+
 
 
       // Gắn sự kiện click cho nút kết nối ví
