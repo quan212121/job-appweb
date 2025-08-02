@@ -1,0 +1,39 @@
+{
+  "name": "Chứng chỉ Microsoft Office Specialist - Associate",
+  "symbol": "MOSCERT",
+  "description": "Chứng chỉ xác nhận Nguyễn Văn A đã hoàn thành xuất sắc các yêu cầu để được công nhận là Microsoft Office Specialist - Associate.",
+  "image": "YOUR_IMAGE_URI_FROM_IPFS",
+  "attributes": [
+    {
+      "trait_type": "Tổ chức Cấp",
+      "value": "Microsoft"
+    },
+    {
+      "trait_type": "Ngày Cấp",
+      "value": "2025-08-01"
+    },
+    {
+      "trait_type": "Học viên",
+      "value": "Nguyễn Văn A"
+    },
+    {
+      "trait_type": "Loại Chứng chỉ",
+      "value": "Microsoft Office Specialist - Associate"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "YOUR_IMAGE_URI_FROM_IPFS",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_MINTER_PUBLIC_KEY_FROM_BACKEND",
+        "share": 100
+      }
+    ]
+  }
+}
